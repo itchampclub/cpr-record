@@ -698,8 +698,8 @@ const App = () => {
     const signedByHTML = `<div style="margin-bottom: 20px; font-weight: bold; text-align: center;">พยาบาลผู้บันทึก: ${name}</div>`; // Changed text
     const totalDurationHTML = durationToPrint ? `<div style="margin-top: 10px; font-weight: bold; text-align: center;">Total CPR Duration: ${durationToPrint}</div>` : '';
 
-
-    const printWindow = window.open('', '', 'width=800,height=600');
+//'', '', 'width=800,height=600'
+    const printWindow = window.open();
     if (!printWindow) {
       showTopAlert('Print window blocked. Please allow pop-ups for this site.', 'error');
       return;
