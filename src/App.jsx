@@ -745,8 +745,9 @@ const App = () => {
       </html>
     `);
     printWindow.document.close();
-    //printWindow.focus();
+    printWindow.focus();
     printWindow.print();
+    printWindow.location.reload();
     printWindow.close();
   };
 
