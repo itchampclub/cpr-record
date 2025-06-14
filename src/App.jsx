@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 // --- SVG Icons (Inline for consistency and ease of use) ---
 const IconPlay = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.38 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.286L7.28 20.32c-1.25.737-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" /></svg>;
 const IconStop = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M6.75 5.653A.75.75 0 0 0 6 6.306v11.388c0 .356.332.651.688.651h10.624c.356 0 .688-.295.688-.651V6.306a.75.75 0 0 0-.688-.653H6.75Z" clipRule="evenodd" /></svg>;
@@ -14,6 +15,11 @@ const IconPrinter = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 const IconRefresh = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.906-1.906a.75.75 0 0 0-1.06-1.06L16.22 5.394a8.25 8.25 0 1 0 2.208 5.762-.75.75 0 0 0-1.48-.235 6.75 6.75 0 1 1-10.002-4.864l.01-.008-.39.39-.39.39a.75.75 0 1 0 1.06 1.06l.84-.84Z" clipRule="evenodd" /></svg>;
 const IconEye = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /><path fillRule="evenodd" d="M1.323 11.447C2.811 6.976 7.027 3.75 12.001 3.75c4.974 0 9.189 3.226 10.678 7.697a11.992 11.992 0 0 1-1.322 1.476c-1.459 1.459-2.93 2.837-4.388 4.137A11.992 11.992 0 0 1 12 21.25c-4.974 0-9.189-3.226-10.678-7.697a11.992 11.992 0 0 1 1.322-1.476ZM12 18.75a6.75 6.75 0 1 0 0-13.5 6.75 6.75 0 0 0 0 13.5Z" clipRule="evenodd" /></svg>;
 const IconTrash = () => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M16.5 4.478a.75.75 0 0 0-1.106-.913L12 6.331 8.606 3.565a.75.75 0 0 0-1.106.913L9.123 7.5H4.5A2.25 2.25 0 0 0 2.25 9.75v9A2.25 2.25 0 0 0 4.5 21h15A2.25 2.25 0 0 0 21.75 18.75v-9A2.25 2.25 0 0 0 19.5 7.5h-4.623l1.116-3.022ZM12.75 12a.75.75 0 0 0-1.5 0v3.75a.75.75 0 0 0 1.5 0V12ZM15.75 12a.75.75 0 0 0-1.5 0v3.75a.75.75 0 0 0 1.5 0V12ZM8.75 12a.75.75 0 0 0-1.5 0v3.75a.75.75 0 0 0 1.5 0V12Z" clipRule="evenodd" /></svg>;
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
 
 
 // --- Top Alert Component ---
