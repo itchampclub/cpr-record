@@ -704,6 +704,12 @@ const App = () => {
       showTopAlert('Print window blocked. Please allow pop-ups for this site.', 'error');
       return;
     }
+
+    /*    <h1 class="text-2xl font-bold text-center mb-4">CPR Digital Record</h1>
+          ${signedByHTML}
+          ${totalDurationHTML}
+          
+          */
     printWindow.document.write(`
       <html>
         <head>
@@ -718,9 +724,6 @@ const App = () => {
           </style>
         </head>
         <body>
-          <h1 class="text-2xl font-bold text-center mb-4">CPR Digital Record</h1>
-          ${signedByHTML}
-          ${totalDurationHTML}
           <div class="print-section">
             <table id="printTable">
               <thead>
@@ -736,11 +739,13 @@ const App = () => {
               </tbody>
             </table>
           </div>
+          ${totalDurationHTML}
+          ${signedByHTML}
         </body>
       </html>
     `);
     printWindow.document.close();
-    printWindow.focus();
+    //printWindow.focus();
     printWindow.print();
     printWindow.close();
   };
