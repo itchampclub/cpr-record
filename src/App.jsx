@@ -56,7 +56,7 @@ const TopAlert = ({ message, type, onClose }) => {
 };
 
 
-// --- Custom Modal Component ---
+// --- Custom Modal Component (for general purpose alerts/inputs) ---
 const CustomModal = ({ isOpen, onClose, title, children, showConfirmButton = false, onConfirm = () => {}, confirmText = "OK", showCancelButton = false, onCancel = () => {} }) => {
   if (!isOpen) return null;
 
@@ -103,6 +103,97 @@ const CustomModal = ({ isOpen, onClose, title, children, showConfirmButton = fal
   );
 };
 
+// --- Image Modal Component (for displaying large algorithm images) ---
+const ImageModal = ({ isOpen, onClose, imageUrl, title }) => {
+  if (!isOpen) return null;
+
+  const [scale, setScale] = useState(1); // State for image zoom scale
+  const imgRef = useRef(null); // Ref to the image element
+
+  const handleImageClick = (e) => {
+    // Prevent closing if the click originated from the download or zoom buttons
+    if (e.target.tagName === 'A' || e.target.closest('button')) {
+      return;
+    }
+    onClose();
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    // Suggest a filename, but the actual downloaded name might depend on server Content-Disposition header
+    link.download = `${title.replace(/\s+/g, '_')}_Algorithm.png`; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleZoomIn = () => {
+    setScale(prevScale => Math.min(prevScale + 0.1, 3)); // Max zoom 3x
+  };
+
+  const handleZoomOut = () => {
+    setScale(prevScale => Math.max(prevScale - 0.1, 0.5)); // Min zoom 0.5x
+  };
+
+  // Reset zoom when modal opens or image changes
+  useEffect(() => {
+    if (isOpen) {
+      setScale(1); // Reset scale to 1 when modal opens
+    }
+  }, [isOpen, imageUrl]);
+
+  return (
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl relative animate-fade-in-up flex flex-col items-center p-4 w-full h-full max-w-[95vw] max-h-[95vh]"> {/* Adjusted width/height to fill more */}
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold z-10"
+        >
+          &times;
+        </button>
+
+        {/* Title */}
+        {title && <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 text-center">{title} Algorithm</h2>}
+
+        {/* Image Container with scroll and max dimensions */}
+        {/* Adjusted max-h to dynamically take up more space */}
+        <div className="flex-grow overflow-auto w-full max-h-[calc(100vh-160px)] items-center justify-center p-2 rounded-lg border border-gray-200">
+            <img
+              ref={imgRef}
+              src={imageUrl}
+              alt={`${title} Algorithm`}
+              className="object-contain cursor-pointer transition-transform duration-100 ease-out"
+              style={{ transform: `scale(${scale})` }} // Apply zoom scale
+              onClick={handleImageClick}
+            />
+        </div>
+
+        {/* Controls for zoom and download */}
+        <div className="flex justify-center gap-4 mt-4">
+          <button
+            onClick={handleZoomIn}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.25 4.507A.75.75 0 0 1 12 3.75h.75a.75.75 0 0 1 .75.75v.75h.75a.75.75 0 0 1 .75.75v.75h.75a.75.75 0 0 1 .75.75v.75h.75a.75.75 0 0 1 .75.75V12a.75.75 0 0 1-.75.75h-.75V13.5a.75.75 0 0 1-.75.75h-.75V15a.75.75 0 0 1-.75.75h-.75V16.5a.75.75 0 0 1-.75.75h-.75V18a.75.75 0 0 1-.75.75h-.75V19.5a.75.75 0 0 1-.75.75H12a.75.75 0 0 1-.75-.75v-.75H10.5a.75.75 0 0 1-.75-.75V18a.75.75 0 0 1-.75-.75h-.75V16.5a.75.75 0 0 1-.75-.75V15a.75.75 0 0 1-.75-.75h-.75V13.5a.75.75 0 0 1-.75-.75H3a.75.75 0 0 1-.75-.75V12a.75.75 0 0 1 .75-.75h.75V10.5a.75.75 0 0 1 .75-.75h.75V9a.75.75 0 0 1 .75-.75h.75V7.5a.75.75 0 0 1 .75-.75h.75V6a.75.75 0 0 1 .75-.75h.75V4.507ZM12 6a.75.75 0 0 1 .75.75v.75H13.5a.75.75 0 0 1 .75.75v.75H15a.75.75 0 0 1 .75.75v.75H17.25a.75.75 0 0 1 .75.75V12a.75.75 0 0 1-.75.75h-.75v.75a.75.75 0 0 1-.75.75h-.75V15a.75.75 0 0 1-.75.75h-.75V16.5a.75.75 0 0 1-.75.75h-.75V18a.75.75 0 0 1-.75.75h-.75V19.5a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V18a.75.75 0 0 1-.75-.75h-.75V16.5a.75.75 0 0 1-.75-.75V15a.75.75 0 0 1-.75-.75h-.75V13.5a.75.75 0 0 1-.75-.75V12a.75.75 0 0 1 .75-.75h.75V10.5a.75.75 0 0 1 .75-.75h.75V9a.75.75 0 0 1 .75-.75h.75V7.5a.75.75 0 0 1 .75-.75h.75V6a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" /></svg>
+
+            Zoom In
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M3.75 12a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></svg>
+            Zoom Out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 // --- Main App Component ---
 const App = () => {
   const [timer, setTimer] = useState('00:00:00');
@@ -119,9 +210,7 @@ const App = () => {
   const [showAlgorithmMenu, setShowAlgorithmMenu] = useState(false);
   const [showEnergyOptions, setShowEnergyOptions] = useState(false);
   const [energyType, setEnergyType] = useState(''); // Stores type of energy delivery (Defib/Cardioversion)
-  const [ekgPreviewImage, setEkgPreviewImage] = useState(''); // Image URL for EKG preview
-  const ekgPreviewTimeoutRef = useRef(null); // Timeout for hiding EKG preview
-
+  
   const [records, setRecords] = useState([]); // List of CPR records
   const [isCprFinished, setIsCprFinished] = useState(false); // State to manage overall CPR session completion
 
@@ -157,6 +246,12 @@ const App = () => {
   const modalCancelCallback = useRef(() => {});
   const modalInputRef = useRef(null); // Ref for input fields within modals
 
+  // Image Modal States (for displaying large algorithm images)
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentImageModalUrl, setCurrentImageModalUrl] = useState('');
+  const [currentImageModalTitle, setCurrentImageModalTitle] = useState('');
+
+
   // Function to open custom modal (centralized modal control for interactive modals)
   const openCustomModal = useCallback((title, content, showConfirm = false, confirmText = 'OK', onConfirm = () => {}, showCancel = false, onCancel = () => {}) => {
     setModalTitle(title);
@@ -179,6 +274,13 @@ const App = () => {
     setModalShowCancel(false);
     modalConfirmCallback.current = () => {}; // Reset callback
     modalCancelCallback.current = () => {}; // Reset callback
+  }, []);
+
+  // Function to close Image Modal
+  const closeImageModal = useCallback(() => {
+    setIsImageModalOpen(false);
+    setCurrentImageModalUrl('');
+    setCurrentImageModalTitle('');
   }, []);
 
   // Load records and app state from Local Storage on initial component mount
@@ -489,24 +591,21 @@ const App = () => {
   };
 
   // Image URLs for CPR algorithms
+  // These images should be placed in the 'public/images/' directory of your project.
+  // For example: public/images/CA.jpg, public/images/TP.jpg, etc.
   const algorithmImages = {
-    CA: `${window.location.origin}/images/CA.jpg`,
-    TP: `${window.location.origin}/images/TP.jpg`,
-    BCD: `${window.location.origin}/images/BCD.jpg`,
-    PCAC: `${window.location.origin}/images/PCAC.jpg` 
+    Cardiac_Arrest: `/images/CA.jpg`, // Removed window.location.origin, using relative path from root
+    Tachycardia_with_Pulse: `/images/TP.jpg`,
+    Bradycardia: `/images/BCD.jpg`,
+    Post_Cardiac_Arrest_Care: `/images/PCAC.jpg` 
   };
 
-  // Displays the selected algorithm image in a modal
-  
+  // Displays the selected algorithm image in the ImageModal
   const showAlgorithm = (type) => {
-    openCustomModal(
-      `${type} Algorithm`,
-      // Max-h-[90vh] and max-w-[90vw] makes modal content fill screen more, object-contain fits image.
-      <img src={algorithmImages[type]} alt={`${type} Algorithm`} className="w-full h-auto rounded-lg shadow-lg max-h-[90vh] max-w-[90vw] object-contain" />,
-      true // Show OK button to close
-    );
+    setCurrentImageModalUrl(algorithmImages[type]);
+    setCurrentImageModalTitle(type);
+    setIsImageModalOpen(true);
   };
-
 
   // Records an Adrenaline dose
   const recordAdrenaline = (route) => {
@@ -563,15 +662,8 @@ const App = () => {
     setEnergyType(''); // Reset energy type
   };
 
-  // EKG image URLs for preview
-  const ekgImages = {
-    PEA: 'https://o.quizlet.com/d.lEH7EiNFSPwWj3.0Kf.A.png',
-    pVT: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Lead_II_rhythm_ventricular_tachycardia_Vtach_VT_%28cropped%29.JPG',
-    VF: 'https://o.quizlet.com/GULdIlyLt4ZBDy9e3GVapg.png',
-  };
-
   // Handles recording EKG rhythm from buttons
-  const recordEKG = (rhythm) => { // Renamed from recordEKGFromDropdown
+  const recordEKG = (rhythm) => {
     addRecord('EKG', rhythm);
     showTopAlert(`EKG Selected: ${rhythm}`, 'success');
   };
@@ -666,7 +758,6 @@ const App = () => {
     setShowAlgorithmMenu(false);
     setShowEnergyOptions(false);
     setEnergyType('');
-    setEkgPreviewImage('');
     setTotalCprDuration(null);
     setIsCprFinished(false); // Enable all buttons on reset
 
@@ -700,18 +791,11 @@ const App = () => {
     const signedByHTML = `<div style="margin-bottom: 20px; font-weight: bold; text-align: center;">พยาบาลผู้บันทึก: ${name}</div>`; // Changed text
     const totalDurationHTML = durationToPrint ? `<div style="margin-top: 10px; font-weight: bold; text-align: center;">Total CPR Duration: ${durationToPrint}</div>` : '';
 
-//'', '', 'width=800,height=600'
     const printWindow = window.open();
     if (!printWindow) {
       showTopAlert('Print window blocked. Please allow pop-ups for this site.', 'error');
       return;
     }
-
-    /*    <h1 class="text-2xl font-bold text-center mb-4">CPR Digital Record</h1>
-          ${signedByHTML}
-          ${totalDurationHTML}
-          
-          */
     printWindow.document.write(`
       <html>
         <head>
@@ -943,25 +1027,25 @@ const handleDeleteHistoricalRecord = (id) => {
           <div className="flex flex-wrap justify-center gap-3 mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('CA')}
+              onClick={() => showAlgorithm('Cardiac_Arrest')}
             >
               Cardiac Arrest
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('TP')}
+              onClick={() => showAlgorithm('Tachycardia_with_Pulse')}
             >
               Tachycardia with Pulse
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('BCD')}
+              onClick={() => showAlgorithm('Bradycardia')}
             >
               Bradycardia
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('PCAC')}
+              onClick={() => showAlgorithm('Post_Cardiac_Arrest_Care')}
             >
               Post Cardiac Arrest Care
             </button>
@@ -1158,7 +1242,7 @@ const handleDeleteHistoricalRecord = (id) => {
         <div className="flex flex-wrap justify-center gap-3 mb-10">
           <button
             className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg shadow-md transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
-            onClick={handlePrintAndBackup} // Changed to handlePrintAndBackup
+            onClick={handlePrintAndBackup}
           >
             <IconPrinter /> Print Record
           </button>
@@ -1302,6 +1386,14 @@ const handleDeleteHistoricalRecord = (id) => {
       >
         {modalContent}
       </CustomModal>
+
+      {/* Image Modal Render */}
+      <ImageModal
+        isOpen={isImageModalOpen}
+        onClose={closeImageModal}
+        imageUrl={currentImageModalUrl}
+        title={currentImageModalTitle}
+      />
 
       {/* Top Alert Render */}
       <TopAlert message={topAlert.message} type={topAlert.type} onClose={() => setTopAlert({ message: null, type: 'info' })} />
