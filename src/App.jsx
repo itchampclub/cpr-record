@@ -490,13 +490,14 @@ const App = () => {
 
   // Image URLs for CPR algorithms
   const algorithmImages = {
-    PEA: "https://thaicpr.org/files/ckfinder/images/Asystole%20PEA.png",
-    VFVT: "https://thaicpr.org/files/ckfinder/images/VFVT(1).png",
-    PostArrest: "https://img5.pic.in.th/file/secure-sv1/45186556_1834338410018225_8448209798037504000_n.png",
-    Basic: "https://thaicpr.org/files/ckfinder/images/BLS.png"
+    CA: `${window.location.origin}/images/CA.jpg`,
+    TP: `${window.location.origin}/images/TP.jpg`,
+    BCD: `${window.location.origin}/images/BCD.jpg`,
+    PCAC: `${window.location.origin}/images/PCAC.jpg` 
   };
 
   // Displays the selected algorithm image in a modal
+  
   const showAlgorithm = (type) => {
     openCustomModal(
       `${type} Algorithm`,
@@ -505,6 +506,7 @@ const App = () => {
       true // Show OK button to close
     );
   };
+
 
   // Records an Adrenaline dose
   const recordAdrenaline = (route) => {
@@ -941,27 +943,27 @@ const handleDeleteHistoricalRecord = (id) => {
           <div className="flex flex-wrap justify-center gap-3 mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('PEA')}
+              onClick={() => showAlgorithm('CA')}
             >
-              PEA
+              Cardiac Arrest
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('VFVT')}
+              onClick={() => showAlgorithm('TP')}
             >
-              VF/VT
+              Tachycardia with Pulse
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('PostArrest')}
+              onClick={() => showAlgorithm('BCD')}
             >
-              Post-Arrest Care
+              Bradycardia
             </button>
             <button
               className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium rounded-lg transition-all duration-200"
-              onClick={() => showAlgorithm('Basic')}
+              onClick={() => showAlgorithm('PCAC')}
             >
-              Basic
+              Post Cardiac Arrest Care
             </button>
           </div>
         )}
