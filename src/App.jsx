@@ -1224,6 +1224,8 @@ const handleDeleteHistoricalRecord = (id) => {
           >
             <option value="" disabled>Select Medication</option>
             <option value="Atropine">Atropine</option>
+            <option value="Adenosine 6 mg">Adenosine 6 mg</option>
+            <option value="Adenosine 12 mg">Adenosine 12 mg </option>
             <option value="Cordarone">Cordarone</option>
             <option value="MgSO4">MgSO4</option>
             <option value="NaHCO3">NaHCO3</option>
